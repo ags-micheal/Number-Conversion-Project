@@ -1,0 +1,840 @@
+from tkinter import*  # Import all classes and functions from tkinter
+import customtkinter  # Import customtkinter for custom themed tkinter widgets
+
+# Setting theme and colour options
+customtkinter.set_appearance_mode("System")  # Set appearance mode to system default
+customtkinter.set_default_color_theme("blue")  # Set default color theme to blue
+
+project = customtkinter.CTk()  # Create a customtkinter window for the application
+
+project.title("Number Conversion Program")  # Set the title of the window
+project.geometry("1280x1720")  # Set the dimensions of the window
+
+# Creating Tabview for different conversion options
+tabs = customtkinter.CTkTabview(project, height=800, width=600)  # Create a tab view
+tabs.pack(pady=10)  # Set dimensions of the tab view 
+
+# Create the binary conversion and binary addition tabs
+Binary_Conversion = tabs.add("Conversions")  # Add a tab for conversions
+Binary_addition = tabs.add("Binary addition")  # Add a tab for binary addition
+
+def click(value):
+    reset_button.pack(pady=180)  # Show the reset button
+    conversion_type = conversion_label.configure(text=conversion_segmented_button.get())  # Update the conversion label
+    # Check which conversion type was selected and call the corresponding function
+    if value == "Binary to denary": 
+        reset_button.configure(Binary_Conversion, text="Again", command=binarytodenary)  
+        binarytodenary()  
+    if value == "Denary to binary":
+        reset_button.configure(Binary_Conversion, text="Again", command=denarytobinary)  
+        denarytobinary()  
+    if value == "Binary to hexadecimal":
+        reset_button.configure(Binary_Conversion, text="Again", command=binarytohexa)  
+        binarytohexa() 
+    if value == "Hexadecimal to binary":
+        reset_button.configure(Binary_Conversion, text="Again", command=hextobinary)
+        hextobinary()      
+    if value == "Denary to hexadecimal":
+        reset_button.configure(Binary_Conversion, text="Again", command=denarytohexa)  
+        denarytohexa() 
+    if value == "Hexadecimal to denary":
+        reset_button.configure(Binary_Conversion, text="Again", command=hexatodenary)
+        hexatodenary() 
+
+# List of conversion options
+conversions = ["Binary to denary", "Denary to binary", "Binary to hexadecimal", "Hexadecimal to binary", "Denary to hexadecimal", "Hexadecimal to denary"]
+conversion_segmented_button = customtkinter.CTkSegmentedButton(Binary_Conversion, values=conversions, command=click)  # Create a segmented button for conversions
+conversion_segmented_button.pack(pady=10)  # Set dimensions of the segmented button
+
+conversion_label = customtkinter.CTkLabel(Binary_Conversion, text="")  # Label to display the selected conversion type
+conversion_label.pack(pady=25)  # Set dimensions of the conversion label
+
+my_label = customtkinter.CTkLabel(Binary_Conversion, text="")  # Label to display the result of the conversion
+my_label.pack(pady=35)  # Set dimensions of the result label
+
+reset_button = customtkinter.CTkButton(Binary_Conversion, text="Again",)  # Button to reset the conversion
+
+# Function to convert binary to denary
+def binarytodenary():
+    input_box = customtkinter.CTkInputDialog(text="Enter your number", title="Binary to denary result")  # Prompt user for input
+    binary_number = input_box.get_input()  # Get the input from the user
+    # Check if the input is valid
+    if presence_check_binarytodenary(binary_number) == True and format_check_binarytodenary(binary_number) == True and length_check_binarytodenary(binary_number) == True:
+        my_label.configure(Binary_Conversion, text="")  # Clear previous results
+        total = 0  # Initialise total
+        # Convert binary to denary
+        if binary_number[0] == "1":
+            total += 128
+        if binary_number[1] == "1":
+            total += 64
+        if binary_number[2] == "1":
+            total += 32
+        if binary_number[3] == "1":
+            total += 16
+        if binary_number[4] == "1":
+            total += 8
+        if binary_number[5] == "1":
+            total += 4
+        if binary_number[6] == "1":
+            total += 2
+        if binary_number[7] == "1":
+            total += 1
+        my_label.configure(text=f"{binary_number} in denary = {total}")  # Display the result
+
+# Function to check the length of the binary number
+def length_check_binarytodenary(binary_number):
+    number_of_bits = len(binary_number)  # Get the length of the binary number
+    if number_of_bits != 8:  # Check if it is not 8 bits
+        my_label.configure(text=f"Enter an EXACT 8 bit binary number")  # Prompt user to enter a valid number
+        binarytodenary()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check if the input is not empty
+def presence_check_binarytodenary(binary_number):
+    if binary_number == "":  # Check if the input is empty
+        my_label.configure(text=f"Enter a number (8 bit binary number including only 0s and 1s), do not leave input box empty")  # Prompt user for input
+        binarytodenary()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check the format of the binary number
+def format_check_binarytodenary(binary_number):
+    valid = ""  # Initialise valid variable
+    for i in binary_number:  # Iterate through each character in the binary number
+        if i != "0" and i != "1":  # Check if the character is not 0 or 1
+            valid = "False"  # Set valid to False
+    if valid == "False":  # If the format is invalid
+        my_label.configure(text=f"Enter a 8 bit binary number with only 0s and 1s no letters")  # Prompt user for valid input
+        binarytodenary()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check the length of binary numbers for addition
+def length_check_binaryaddition(binary_number):
+    number_of_bits = len(binary_number)  # Get the length of the binary number
+    if number_of_bits != 8:  # Check if it is not 8 bits
+        addition_label.configure(text=f"Enter an EXACT 8 bit binary number")  # Prompt user for valid input
+        binaryaddtion()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to convert denary to binary
+def denarytobinary():
+    denary_number = ""  # Initialise denary number
+    input_box = customtkinter.CTkInputDialog(text="Enter your number", title="Denary to binary result")  # Prompt user for input
+    denary_number = input_box.get_input()  # Get the input from the user
+    # Check if the input is valid
+    if format_check_denarytobinary(denary_number) == True:
+        number = int(denary_number)  # Convert input to integer
+        if presence_check_denarytobinary(denary_number) == True and range_check_denarytobinary(number) == True:
+            my_label.configure(Binary_Conversion, text="")  # Clear previous results
+            binary_number = []  # Initialise binary number list
+            calculated_number = ""  # Initialise calculated number string
+            # Convert denary to binary
+            if number >= 128:
+                number -= 128
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 64:
+                number -= 64
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 32:
+                number -= 32
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 16:
+                number -= 16
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 8:
+                number -= 8
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 4:
+                number -= 4
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 2:
+                number -= 2
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 1:
+                number -= 1
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+
+    # To present the number as a string without brackets
+    for i in binary_number:
+        calculated_number += i  # Convert binary digits to form the binary string
+
+    my_label.configure(text=f"{denary_number} in binary = {calculated_number}")  # Display the result
+
+# Function to check the range of the denary number
+def range_check_denarytobinary(denary_number):
+    if denary_number > 255 or denary_number < 0:  # Check if the number is out of range
+        my_label.configure(text="Number must be between 1 and 255")  # Prompt user for valid input
+        denarytobinary()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check if the input is not empty
+def presence_check_denarytobinary(denary_number):
+    if denary_number == "":  # Check if the input is empty
+        my_label.configure(text="Enter a number, do not leave the input box empty")  # Prompt user for input
+        denarytobinary()  # Call the function again
+    return True  # Return True if valid
+
+# Function to check the format of the denary number
+def format_check_denarytobinary(denary_number):
+    if denary_number.isnumeric() == True:  # Check if the input is numeric
+        return True  # Return True if valid
+    else:
+        my_label.configure(text="Enter a number only containing integers, do not leave the box empty")  # Prompt user for valid input
+        denarytobinary()  # Call the function again
+
+# Function to convert binary to hexadecimal
+def binarytohexa():
+    input_box = customtkinter.CTkInputDialog(text="Enter your number", title="Binary to hexadecimal result")  # Prompt user for input
+    binary_number = input_box.get_input()  # Get the input from the user
+    # Check if the input is valid
+    if presence_check_binarytohexa(binary_number) == True and format_check_binarytohexa(binary_number) == True and length_check_binarytohexa(binary_number) == True:
+        my_label.configure(Binary_Conversion, text="")  # Clear previous results
+        hexa_number = []  # Initialise hexadecimal number list
+        calculated_number = ""  # Initialise calculated number string
+        number = str(binary_number)  # Convert binary number to string
+        # Split the binary number into nibbles
+        nibble1 = number[0] + number[1] + number[2] + number[3]
+        nibble2 = number[4] + number[5] + number[6] + number[7]
+        # Convert each nibble to hexadecimal
+        if nibble1 == "0000":
+            hexa_number.append("0")
+        if nibble1 == "0001":
+            hexa_number.append("1")
+        if nibble1 == "0010":
+            hexa_number.append("2")
+        if nibble1 == "0011":
+            hexa_number.append("3")
+        if nibble1 == "0100":
+            hexa_number.append("4")
+        if nibble1 == "0101":
+            hexa_number.append("5")
+        if nibble1 == "0110":
+            hexa_number.append("6")
+        if nibble1 == "0111":
+            hexa_number.append("7")
+        if nibble1 == "1000":
+            hexa_number.append("8")
+        if nibble1 == "1001":
+            hexa_number.append("9")
+        if nibble1 == "1010":
+            hexa_number.append("A")
+        if nibble1 == "1011":
+            hexa_number.append("B")
+        if nibble1 == "1100":
+            hexa_number.append("C")
+        if nibble1 == "1101":
+            hexa_number.append("D")
+        if nibble1 == "1110":
+            hexa_number.append("E") 
+        if nibble1 == "1111":
+            hexa_number.append("F")
+    
+        # Convert the second nibble to hexadecimal
+        if nibble2 == "0000":
+            hexa_number.append("0")
+        if nibble2 == "0001":
+            hexa_number.append("1")
+        if nibble2 == "0010":
+            hexa_number.append("2")
+        if nibble2 == "0011":
+            hexa_number.append("3")
+        if nibble2 == "0100":
+            hexa_number.append("4")
+        if nibble2 == "0101":
+            hexa_number.append("5")
+        if nibble2 == "0110":
+            hexa_number.append("6")
+        if nibble2 == "0111":
+            hexa_number.append("7")
+        if nibble2 == "1000":
+            hexa_number.append("8")
+        if nibble2 == "1001":
+            hexa_number.append("9")
+        if nibble2 == "1010":
+            hexa_number.append("A")
+        if nibble2 == "1011":
+            hexa_number.append("B")
+        if nibble2 == "1100":
+            hexa_number.append("C")
+        if nibble2 == "1101":
+            hexa_number.append("D")
+        if nibble2 == "1110":
+            hexa_number.append("E") 
+        if nibble2 == "1111":
+            hexa_number.append("F")
+    
+        # Convert hexadecimal digits to form the hexadecimal string
+        for i in hexa_number:
+            calculated_number += i
+    
+        my_label.configure(text=f"{binary_number} in hexadecimal = {calculated_number}")  # Display the result
+
+# Function to check the length of the binary number for hexadecimal conversion
+def length_check_binarytohexa(binary_number):
+    number_of_bits = len(binary_number)  # Get the length of the binary number
+    if number_of_bits != 8:  # Check if it is not 8 bits
+        my_label.configure(text=f"Enter an EXACT 8 bit binary number")  # Prompt user for valid input
+        binarytohexa()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check if the input is not empty
+def presence_check_binarytohexa(binary_number):
+    if binary_number == "":  # Check if the input is empty
+        my_label.configure(text=f"Enter a number (8 bit binary number including only 0s and 1s), do not leave the input box empty")  # Prompt user for input
+        binarytohexa()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check the format of the binary number for hexadecimal conversion
+def format_check_binarytohexa(binary_number):
+    valid = ""  # Initialise valid variable
+    for i in binary_number:  # Iterate through each character in the binary number
+        if i != "0" and i != "1":  # Check if the character is not 0 or 1
+            valid = "False"  # Set valid to False
+    if valid == "False":  # If the format is invalid
+        my_label.configure(text=f"Enter a 8 bit binary number with only 0s and 1s no letters")  # Prompt user for valid input
+        binarytohexa()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to convert hexadecimal to binary
+def hextobinary():
+    input_box = customtkinter.CTkInputDialog(text="Enter your number", title="Hexadecimal to binary")  # Prompt user for input
+    hex_number = input_box.get_input()  # Get the input from the user
+    hexa = str(hex_number)  # Convert hexadecimal number to string
+    binary_number = []  # Initialise binary number list
+    calculated_number = ""  # Initialise calculated number string
+    # Check if the input is valid
+    if presence_check_hexadecimal(hex_number) == True and hexadecimal_check(hex_number) == True and length_check_hexadecimal(hex_number) == True:
+        # Convert each hexadecimal digit to binary
+        if hexa[0] == "A":
+            binary_number.append("1010")
+        if hexa[0] == "B":
+            binary_number.append("1011")
+        if hexa[0] == "C":
+            binary_number.append("1100")
+        if hexa[0] == "D":
+            binary_number.append("1101")
+        if hexa[0] == "E":
+            binary_number.append("1110")
+        if hexa[0] == "F":
+            binary_number.append("1111")
+        if hexa[0] == "1":
+            binary_number.append("0001")
+        if hexa[0] == "2":
+            binary_number.append("0010")
+        if hexa[0] == "3":
+            binary_number.append("0011")
+        if hexa[0] == "4":
+            binary_number.append("0100")
+        if hexa[0] == "5":
+            binary_number.append("0101")
+        if hexa[0] == "6":
+            binary_number.append("0110")
+        if hexa[0] == "7":
+            binary_number.append("0111")
+        if hexa[0] == "8":
+            binary_number.append("1000")
+        if hexa[0] == "9":
+            binary_number.append("1001")
+    
+        # Convert the second hexadecimal digit to binary
+        if hexa[1] == "A":
+            binary_number.append("1010")
+        if hexa[1] == "B":
+            binary_number.append("1011")
+        if hexa[1] == "C":
+            binary_number.append("1100")
+        if hexa[1] == "D":
+            binary_number.append("1101")
+        if hexa[1] == "E":
+            binary_number.append("1110")
+        if hexa[1] == "F":
+            binary_number.append("1111")
+        if hexa[1] == "1":
+            binary_number.append("0001")
+        if hexa[1] == "2":
+            binary_number.append("0010")
+        if hexa[1] == "3":
+            binary_number.append("0011")
+        if hexa[1] == "4":
+            binary_number.append("0100")
+        if hexa[1] == "5":
+            binary_number.append("0101")
+        if hexa[1] == "6":
+            binary_number.append("0110")
+        if hexa[1] == "7": 
+            binary_number.append("0111")
+        if hexa[1] == "8":
+            binary_number.append("1000")
+        if hexa[1] == "9":
+            binary_number.append("1001")
+        
+        # Convert binary digits to form the binary string
+        for i in binary_number:
+            calculated_number += i
+    
+        my_label.configure(text=f"{hex_number} in binary = {calculated_number}")  # Display the result
+
+# Function to check if the input is a valid hexadecimal number
+def hexadecimal_check(hex_number):
+    valid_chars = "0123456789ABCDEF"  # Define valid hexadecimal characters
+    if (hex_number[0]) not in valid_chars:  # Check if each character is valid
+        my_label.configure(text=f"Enter a hexadecimal value containing only A-F and/or 1-9 with only two characters")  # Prompt user for valid input
+        hextobinary()
+    elif hex_number[1] not in valid_chars:  # Check if each character is valid
+        my_label.configure(text=f"Enter a hexadecimal value containing only A-F and/or 1-9 with only two characters")  # Prompt user for valid input
+        hextobinary()
+    else:
+        return True  # Return True if all characters are valid
+
+# Function to check the length of the hexadecimal number
+def length_check_hexadecimal(hex_number):
+    if len(hex_number) != 2:  # Check if the length is not 2
+        my_label.configure(text="Enter a hexadecimal value with EXACTly two characters.")  # Prompt user for valid input
+        hextobinary()
+    else:
+        return True  # Return True if all characters are valid
+
+# Function to check if the input is not empty
+def presence_check_hexadecimal(hex_number):
+    if hex_number == "":  # Check if the input is empty
+        my_label.configure(text="Enter a hexadecimal value, do not leave the input empty")  # Prompt user for input
+        hextobinary()
+    else:
+        return True  # Return True if all characters are valid
+# Function to convert denary to hexadecimal
+def denarytohexa():
+    input_box = customtkinter.CTkInputDialog(text="Enter your number", title="Denary to hexadecimal result")  # Prompt user for input
+    denary_number = input_box.get_input()  # Get the input from the user
+    # Check if the input is valid
+    if format_check_denarytohexa(denary_number) == True:
+        number = int(denary_number)  # Convert input to integer
+        if presence_check_denarytohexa(denary_number) == True and length_check_denarytohexa(number) == True:
+            my_label.configure(Binary_Conversion, text="")  # Clear previous results
+            binary_number = []  # Initialise binary number list
+            # Convert denary to binary
+            if number >= 128:
+                number -= 128
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 64:
+                number -= 64
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 32:
+                number -= 32
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 16:
+                number -= 16
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 8:
+                number -= 8
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 4:
+                number -= 4
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 2:
+                number -= 2
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+            if number >= 1:
+                number -= 1
+                binary_number.append("1")
+            else:
+                binary_number.append("0")
+
+            hexa_number = []  # Initialise hexadecimal number list
+            calculated_number = ""  # Initialise calculated number string
+            # Convert binary to hexadecimal
+            nibble1 = binary_number[0] + binary_number[1] + binary_number[2] + binary_number[3]
+            nibble2 = binary_number[4] + binary_number[5] + binary_number[6] + binary_number[7]
+            if nibble1 == "0000":
+                hexa_number.append("0")
+            if nibble1 == "0001":
+                hexa_number.append("1")
+            if nibble1 == "0010":
+                hexa_number.append("2")
+            if nibble1 == "0011":
+                hexa_number.append("3")
+            if nibble1 == "0100":
+                hexa_number.append("4")
+            if nibble1 == "0101":
+                hexa_number.append("5")
+            if nibble1 == "0110":
+                hexa_number.append("6")
+            if nibble1 == "0111":
+                hexa_number.append("7")
+            if nibble1 == "1000":
+                hexa_number.append("8")
+            if nibble1 == "1001":
+                hexa_number.append("9")
+            if nibble1 == "1010":
+                hexa_number.append("A")
+            if nibble1 == "1011":
+                hexa_number.append("B")
+            if nibble1 == "1100":
+                hexa_number.append("C")
+            if nibble1 == "1101":
+                hexa_number.append("D")
+            if nibble1 == "1110":
+                hexa_number.append("E") 
+            if nibble1 == "1111":
+                hexa_number.append("F")
+    
+            if nibble2 == "0000":
+                hexa_number.append("0")
+            if nibble2 == "0001":
+                hexa_number.append("1")
+            if nibble2 == "0010":
+                hexa_number.append("2")
+            if nibble2 == "0011":
+                hexa_number.append("3")
+            if nibble2 == "0100":
+                hexa_number.append("4")
+            if nibble2 == "0101":
+                hexa_number.append("5")
+            if nibble2 == "0110":
+                hexa_number.append("6")
+            if nibble2 == "0111":
+                hexa_number.append("7")
+            if nibble2 == "1000":
+                hexa_number.append("8")
+            if nibble2 == "1001":
+                hexa_number.append("9")
+            if nibble2 == "1010":
+                hexa_number.append("A")
+            if nibble2 == "1011":
+                hexa_number.append("B")
+            if nibble2 == "1100":
+                hexa_number.append("C")
+            if nibble2 == "1101":
+                hexa_number.append("D")
+            if nibble2 == "1110":
+                hexa_number.append("E") 
+            if nibble2 == "1111":
+                hexa_number.append("F")
+
+            # Convert hexadecimal digits to form the hexadecimal string
+            for i in hexa_number:
+                calculated_number += i
+    
+            my_label.configure(text=f"{denary_number} in hexadecimal = {calculated_number}")  # Display the result
+
+# Function to check the length of the denary number for hexadecimal conversion
+def length_check_denarytohexa(denary_number):
+    if denary_number > 255 or denary_number < 0:  # Check if the number is out of range
+        my_label.configure(text="Number must be between 1 and 255")  # Prompt user for valid input
+        denarytohexa()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check if the input is not empty
+def presence_check_denarytohexa(denary_number):
+    if denary_number == "":  # Check if the input is empty
+        my_label.configure(text="Enter a number, cannot leave the input box empty")  # Prompt user for input
+        denarytohexa()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check the format of the denary number for hexadecimal conversion
+def format_check_denarytohexa(denary_number):
+    if denary_number.isnumeric() == True:  # Check if the input is numeric
+        return True  # Return True if valid
+    else:
+        my_label.configure(text="Enter a number with only containing integers, do not leave the box empty")  # Prompt user for valid input
+        denarytohexa()  # Call the function again
+
+# Function to convert hexadecimal to denary
+def hexatodenary():
+    input_box = customtkinter.CTkInputDialog(text="Enter your number", title="Hexadecimal to denary")  # Prompt user for input
+    hexa_number = input_box.get_input()  # Get the input from the user
+    hexa = str(hexa_number)  # Convert hexadecimal number to string
+    binary_number = []  # Initialise binary number list
+    binary = ""  # Initialise binary string
+    # Check if the input is valid
+    if presence_check_hexadecimaltodenary(hexa_number) == True and hexadecimaltodenary_check(hexa_number) == True and length_check_hexadecimaltodenary(hexa_number) == True:
+        my_label.configure(Binary_Conversion, text="")  # Clear previous results
+        # Convert each hexadecimal digit to binary
+        if hexa[0] == "A":
+            binary_number.append("1010")
+        if hexa[0] == "B":
+            binary_number.append("1011")
+        if hexa[0] == "C":
+            binary_number.append("1100")
+        if hexa[0] == "D":
+            binary_number.append("1101")
+        if hexa[0] == "E":
+            binary_number.append("1110")
+        if hexa[0] == "F":
+            binary_number.append("1111")
+        if hexa[0] == "1":
+            binary_number.append("0001")
+        if hexa[0] == "2":
+            binary_number.append("0010")
+        if hexa[0] == "3":
+            binary_number.append("0011")
+        if hexa[0] == "4":
+            binary_number.append("0100")
+        if hexa[0] == "5":
+            binary_number.append("0101")
+        if hexa[0] == "6":
+            binary_number.append("0110")
+        if hexa[0] == "7":
+            binary_number.append("0111")
+        if hexa[0] == "8":
+            binary_number.append("1000")
+        if hexa[0] == "9":
+            binary_number.append("1001")
+    
+        # Convert the second hexadecimal digit to binary
+        if hexa[1] == "A":
+            binary_number.append("1010")
+        if hexa[1] == "B":
+            binary_number.append("1011")
+        if hexa[1] == "C":
+            binary_number.append("1100")
+        if hexa[1] == "D":
+            binary_number.append("1101")
+        if hexa[1] == "E":
+            binary_number.append("1110")
+        if hexa[1] == "F":
+            binary_number.append("1111")
+        if hexa[1] == "1":
+            binary_number.append("0001")
+        if hexa[1] == "2":
+            binary_number.append("0010")
+        if hexa[1] == "3":
+            binary_number.append("0011")
+        if hexa[1] == "4":
+            binary_number.append("0100")
+        if hexa[1] == "5":
+            binary_number.append("0101")
+        if hexa[1] == "6":
+            binary_number.append("0110")
+        if hexa[1] == "7": 
+            binary_number.append("0111")
+        if hexa[1] == "8":
+            binary_number.append("1000")
+        if hexa[1] == "9":
+            binary_number.append("1001")
+        
+        # Convert binary digits to form the binary string
+        for i in binary_number:
+            binary += i
+        
+        total = 0  # Initialise total
+        # Convert binary to denary
+        if binary[0] == "1":
+            total += 128
+        if binary[1] == "1":
+            total += 64
+        if binary[2] == "1":
+            total += 32
+        if binary[3] == "1":
+            total += 16
+        if binary[4] == "1":
+            total += 8
+        if binary[5] == "1":
+            total += 4
+        if binary[6] == "1":
+            total += 2
+        if binary[7] == "1":
+            total += 1
+        
+        my_label.configure(text=f"{hexa_number} in denary = {total}")  # Display the result
+
+# Function to check if the input is a valid hexadecimal number for denary conversion
+def hexadecimaltodenary_check(hex_number):
+    valid_chars = "0123456789ABCDEF"  # Define valid hexadecimal characters
+    if (hex_number[0]) not in valid_chars:  # Check if each character is valid
+        my_label.configure(text=f"Enter a hexadecimal value containing only A-F and/or 1-9 with only two characters")  # Prompt user for valid input
+        hexatodenary()
+    elif (hex_number[1]) not in valid_chars:  # Check if each character is valid
+        my_label.configure(text=f"Enter a hexadecimal value containing only A-F and/or 1-9 with only two characters")  # Prompt user for valid input
+        hexatodenary()
+    else:
+        return True  # Return True if all characters are valid
+
+# Function to check the length of the hexadecimal number for denary conversion
+def length_check_hexadecimaltodenary(hex_number):
+    hex = str(hex_number)  # Convert input to string
+    if len(hex) != 2:  # Check if the length is not 2
+        my_label.configure(text=f"Do not enter more or less than 2 characters")  # Prompt user for valid input
+        hexatodenary()  # Call the function again
+    else:
+        return True  # Return True if valid
+        
+# Function to check if the input is not empty for hexadecimal to denary conversion
+def presence_check_hexadecimaltodenary(hex_number):
+    if hex_number == "":  # Check if the input is empty
+        my_label.configure(text=f"Do not leave the input empty.Enter a hexadecimal value containing only A-F and/or 1-9 with only two characters")  # Prompt user for input
+        hexatodenary()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to select the binary addition option
+def select(value):
+    if value == "Binary Addition":
+        addtion_reset_button.configure(Binary_addition, text="Reset", command=reset_addtion)  # Configure reset button
+        binaryaddtion()  # Call the binary addition function
+
+# List of addition options
+addition = ["Binary Addition"]
+addition_segmented_button = customtkinter.CTkSegmentedButton(Binary_addition, values=addition, command=select)  # Create a segmented button for addition
+addition_segmented_button.pack(pady=10)  # Set dimensions of the segmented button
+
+addition_label = customtkinter.CTkLabel(Binary_addition, text="")  # Label to display the result of the addition
+addition_label.pack(pady=10)  # Set dimensions of the addition label
+
+# Function to reset the addition
+def reset_addtion():
+    select("Binary Addition")  # Call the select function to reset
+
+addtion_reset_button = customtkinter.CTkButton(Binary_addition, text="Reset", command=reset_addtion)  # Button to reset the addition
+
+# Function to perform binary addition
+def binaryaddtion():
+    addtion_reset_button.pack(pady=30)  # Show the reset button
+    input_box1 = customtkinter.CTkInputDialog(text="Enter the first binary number", title="Binary Addition")  # Prompt user for first binary number
+    binary_number1 = input_box1.get_input()  # Get the first binary number
+    input_box2 = customtkinter.CTkInputDialog(text="Enter the second binary number", title="Binary Addition")  # Prompt user for second binary number
+    binary_number2 = input_box2.get_input()  # Get the second binary number
+    
+    # Check if both binary numbers are valid
+    if (presence_check_binaryaddtion(binary_number1) and 
+        presence_check_binaryaddtion(binary_number2) and
+        format_check_binaryaddtion(binary_number1) and 
+        format_check_binaryaddtion(binary_number2) and 
+        length_check_binaryaddtion(binary_number1) and 
+        length_check_binaryaddtion(binary_number2)):
+        
+        addition_label.configure(text="")  # Clear previous results
+        denary1 = 0  # Initialise first denary number
+        result = 0  # Initialise result
+        
+        # Convert first binary number to denary
+        if binary_number1[0] == "1":
+            denary1 += 128
+        if binary_number1[1] == "1":
+            denary1 += 64
+        if binary_number1[2] == "1":
+            denary1 += 32
+        if binary_number1[3] == "1":
+            denary1 += 16
+        if binary_number1[4] == "1":
+            denary1 += 8
+        if binary_number1[5] == "1":
+            denary1 += 4
+        if binary_number1[6] == "1":
+            denary1 += 2
+        if binary_number1[7] == "1":
+            denary1 += 1
+            
+        denary2 = 0  # Initialise second denary number
+        
+        # Convert second binary number to denary
+        if binary_number2[0] == "1":
+            denary2 += 128
+        if binary_number2[1] == "1":
+            denary2 += 64
+        if binary_number2[2] == "1":
+            denary2 += 32
+        if binary_number2[3] == "1":
+            denary2 += 16
+        if binary_number2[4] == "1":
+            denary2 += 8
+        if binary_number2[5] == "1":
+            denary2 += 4
+        if binary_number2[6] == "1":
+            denary2 += 2
+        if binary_number2[7] == "1":
+            denary2 += 1
+
+        denary_addition = denary1 + denary2  # Calculate the sum of denary numbers
+        result = denary_addition % 256  # Keep only the last 8 bits
+        overflow = "without"  # Initialise overflow status
+        
+        if denary_addition >= 256:  # Check for overflow
+            overflow = "with"
+
+        result_binary_number = []  # Initialise result binary number list
+        calculated_number = ""  # Initialise calculated number string
+        
+        # Convert result to binary
+        for i in [128, 64, 32, 16, 8, 4, 2, 1]:
+            if result >= i:
+                result_binary_number.append("1")
+                result -= i
+            else:
+                result_binary_number.append("0")
+    
+        # Convert result binary digits to form the binary string
+        for i in result_binary_number:
+            calculated_number = calculated_number + i
+    
+        addition_label.configure(text=f"{binary_number1} + {binary_number2} = {calculated_number} {overflow} overflow")  # Display the result
+
+# Function to check the length of binary numbers for addition
+def length_check_binaryaddtion(binary_number):
+    number_of_bits = len(binary_number)  # Get the length of the binary number
+    if number_of_bits != 8:  # Check if it is not 8 bits
+        addition_label.configure(text=f"Enter an EXACT 8 bit binary number")  # Prompt user for valid input
+        binaryaddtion()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check if the input is not empty for binary addition
+def presence_check_binaryaddtion(binary_number):
+    if binary_number == "":  # Check if the input is empty
+        my_label.configure(text=f"Enter a number (8 bit binary number including only 0s and 1s), do not leave the input empty")  # Prompt user for input
+        binaryaddtion()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Function to check the format of the binary number for addition
+def format_check_binaryaddtion(binary_number):
+    valid = ""  # Initialise valid variable
+    for i in binary_number:  # Iterate through each character in the binary number
+        if i != "0" and i != "1":  # Check if the character is not 0 or 1
+            valid = "False"  # Set valid to False
+    if valid == "False":  # If the format is invalid
+        my_label.configure(text=f"Enter a 8 bit binary number with only 0s and 1s no letters")  # Prompt user for valid input
+        binaryaddtion()  # Call the function again
+    else:
+        return True  # Return True if valid
+
+# Start the main loop of the application
+project.mainloop()
